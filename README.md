@@ -1,20 +1,18 @@
-# XCode Uploader
+# CODz | Drag & Drop Uploader
+<div align="center">
+  <div style="display: flex; align-items: center; justify-content: center;">
+    <img width="70" src="imgs/codz-logo.png" alt="CODz Uploader Logo">
+    <h1 style="margin-left: 10px;">Drag & Drop Uploader</h1>
+  </div>
 
-![XCode Uploader Logo](imgs/xcode-logo.png)
+  <p>
+    <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version">
+    <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
+    <img src="https://img.shields.io/badge/author-Ahmed%20Ali-orange.svg" alt="Author">
+  </p>
 
-# xCode Drag & Drop Uploader
-
-<p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version">
-  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/author-Ahmed%20Ali-orange.svg" alt="Author">
-</p>
-
-<p align="center">
-     <img width="200" src="imgs/xcode-logo.png" alt="xCode Uploader Logo">
-</p>
-
-<h2 align="center">A modern, flexible file upload component</h2>
+  <h2>A modern, flexible file upload component</h2>
+</div>
 
 ## Features
 
@@ -113,16 +111,14 @@ If you're using Laravel, you can use the included Blade component:
 ### Required File Upload in a Form
 
 ```html
-<form>
-    <div class="file-uploader" 
-         data-max-size="500" 
-         data-accepted-types=".png,.jpg,.jpeg"
-         data-single-mode="true"
-         data-required="true"
-         data-name="profile_image">
-    </div>
-    <button type="submit">Submit</button>
-</form>
+<div class="file-uploader" 
+     data-max-size="500" 
+     data-accepted-types=".png,.jpg,.jpeg"
+     data-single-mode="true"
+     data-required="true"
+     data-name="profile_image">
+</div>
+<button type="submit">Submit</button>
 ```
 
 ## Events & Methods

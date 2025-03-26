@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xCode Drag & Drop Uploader | Modern File Upload Component</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+        :root {
+            --primary-color: #3367d6;
+            --primary-light: #4285f4;
+            --secondary-color: #34a853;
+            --dark-color: #202124;
+            --light-color: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(32, 33, 36, 0.06);
+            --transition: all 0.3s ease;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--gray-800);
+            background-color: var(--gray-100);
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--light-color);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB4PSIwIiB5PSIwIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSgzMCkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background-color: var(--light-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(32, 33, 36, 0.12);
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--primary-color);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .section {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--dark-color);
+        }
+
+        .section-description {
+            color: var(--gray-600);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Cards Layout */
+        .uploader-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .uploader-item {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            transition: var(--transition);
+            height: 100%;
+            border: 1px solid var(--gray-300);
+            overflow: hidden;
+        }
+
+        .uploader-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(32, 33, 36, 0.1);
+        }
+
+        .uploader-item h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        /* Remove demo-icon related styles */
+        
+        /* Badge for required field */
+        .required-badge {
+            background-color: #ffebee;
+            color: #f44336;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            vertical-align: middle;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .uploader-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .uploader-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form styles within grid */
+        .uploader-item form button {
+            padding: 0.50rem 1rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--light-color);
+            border: none;
+            border-radius: var(--border-radius);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3);
+        }
+
+        .uploader-item form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(66, 133, 244, 0.4);
+        }
+
+        .uploader-item form button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                    </svg>
+                </div>
+                <span class="logo-text">xCode</span>
+            </div>
+            <h1>Drag & Drop Uploader</h1>
+            <p>A modern, flexible file uploader component with support for single and multiple file uploads, previews, and existing file management.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Demo Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Component Demos</h2>
+                <p class="section-description">
+                    Explore different configurations of the xCode Drag & Drop Uploader component.
+                </p>
+            </div>
+            
+            <div class="uploader-grid">
+                <!-- Single File Uploader (Empty) -->
+                <div class="uploader-item">
+                    <h3>Single File Uploader</h3>
+                    <div class="file-uploader" 
+                        data-max-size="500" 
+                        data-accepted-types=".xlsx,.docx,.pdf"
+                        data-single-mode="true">
+                    </div>
+                </div>
+                
+                <!-- Required Single File Uploader -->
+                <div class="uploader-item">
+                    <h3>
+                        Required Single File
+                    </h3>
+                    <div class="file-uploader" 
+                        data-max-size="500" 
+                        data-accepted-types=".png,.jpg,.jpeg"
+                        data-single-mode="true"
+                        data-required="true">
+                    </div>
+                </div>
+                
+                <!-- Single File Uploader (With existing file) -->
+                <div class="uploader-item">
+                    <h3>Single File with Existing</h3>
+                    <div class="file-uploader" 
+                        data-max-size="5120" 
+                        data-accepted-types=".xlsx,.docx,.pdf"
+                        data-single-mode="true"
+                        data-existing-files='[{
+                            "id": "1",
+                            "url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                            "deleteUrl": ""
+                        }]'>
+                    </div>
+                </div>
+                
+                <!-- Multi File Uploader (Empty) -->
+                <div class="uploader-item">
+                    <h3>Multi File Uploader</h3>
+                    <div class="file-uploader" 
+                        data-max-size="10240" 
+                        data-accepted-types="application/pdf,image/jpeg,image/png"
+                        data-single-mode="false">
+                    </div>
+                </div>
+                
+                <!-- Multi File Uploader (With existing files) -->
+                <div class="uploader-item">
+                    <h3>Multi File with Existing</h3>
+                    <div class="file-uploader" 
+                        data-max-size="500" 
+                        data-accepted-types="application/pdf,image/jpeg,image/png"
+                        data-single-mode="false"
+                        data-existing-files='[
+                              {"id": "1", "url": "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg", "deleteUrl": "https://jsonplaceholder.typicode.com/todos/1"},
+                              {"id": "2", "url": "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg", "deleteUrl": "https://jsonplaceholder.typicode.com/todos/2"},
+                              {"id": "3", "url": "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg", "deleteUrl": "https://jsonplaceholder.typicode.com/todos/3"},
+                              {"id": "4", "url": "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg", "deleteUrl": "https://jsonplaceholder.typicode.com/todos/4"}
+                         ]'
+                         data-delete-method="GET">
+                    </div>
+                </div>
+                
+                <!-- Form Example (Integrated) -->
+                <div class="uploader-item">
+                     <form>
+                         <div style="display: flex; align-items: start; gap: 8px;">
+                              <h3>Form with File Uploader</h3>
+                              <button type="submit">Submit</button>
+                         </div>
+                        <div class="file-uploader" 
+                            data-max-size="500" 
+                            data-accepted-types=".png,.jpg,.jpeg"
+                            data-single-mode="true"
+                            data-required="true"
+                            data-name="profile_image">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<footer class="footer" style="text-align: center; padding: 2rem 0; background-color: var(--gray-200); margin-top: 2rem;">
+     <p>&copy; <script>document.write(new Date().getFullYear())</script> xCode Drag & Drop Uploader. All rights reserved.</p>
+</footer>
+     
+    <script src="assets/scripts.js"></script>
+</body>
+</html>

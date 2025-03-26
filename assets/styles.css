@@ -1,0 +1,629 @@
+:root {
+  --uploader-primary: #4a90e2;
+  --uploader-border: #dbe1e9;
+  --uploader-text: #333333;
+  --uploader-bg: #f9f9f9;
+  --uploader-error: #e74c3c;
+  --uploader-success: #2ecc71;
+  --uploader-shadow: rgba(0, 0, 0, 0.1);
+  --file-pdf: #f44336;
+  --file-doc: #2196f3;
+  --file-xls: #4caf50;
+  --file-ppt: #ff9800;
+  --file-txt: #607d8b;
+  --file-zip: #9c27b0;
+  --file-default: #757575;
+}
+
+.file-uploader {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+  position: relative;
+  width: 100%;
+  min-height: 110px;
+  background-color: var(--uploader-bg);
+  border: 2px dashed var(--uploader-border);
+  border-radius: 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+  height: 160px;
+  box-sizing: border-box;
+}
+
+.file-uploader.drag-over {
+  border-color: var(--uploader-primary);
+  background-color: rgba(74, 144, 226, 0.05);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px var(--uploader-shadow);
+}
+
+.file-uploader[data-single-mode="true"] {
+  width: 100%;
+}
+
+.file-uploader .uploader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* padding: 12px 0px; */
+  height: 100%;
+  min-height: 80px;
+  text-align: center;
+}
+
+.file-uploader .uploader-icon {
+  color: var(--uploader-primary);
+  height: 35px;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0px;
+  opacity: 0.9;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.file-uploader:hover .uploader-icon {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.file-uploader .uploader-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.file-uploader .uploader-text {
+  color: var(--uploader-text);
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.file-uploader .uploader-hint {
+  font-size: 10px;
+  color: #777;
+  margin-top: 4px;
+  line-height: 1.4;
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.file-uploader .uploader-browse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 14px;
+  background: linear-gradient(135deg, var(--uploader-primary) 0%, #3a80d2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 5px;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.25);
+  letter-spacing: 0.3px;
+}
+
+.file-uploader .uploader-browse:hover {
+  background: linear-gradient(135deg, #3a80d2 0%, var(--uploader-primary) 100%);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.35);
+  transform: translateY(-1px);
+}
+
+.file-uploader .uploader-browse:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(74, 144, 226, 0.25);
+}
+
+.file-uploader .uploader-browse svg {
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 6px;
+  fill: currentColor;
+}
+
+.file-uploader .uploader-input {
+  display: none;
+}
+
+.file-uploader .uploader-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 24px 0px 15px;
+  min-height: 110px;
+}
+
+.file-uploader .single-preview {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+  height: 100%;
+  min-height: 110px;
+  position: relative;
+}
+
+.file-uploader .single-preview-item {
+  width: 120px;
+  height: 120px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px var(--uploader-shadow);
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  margin-top: 6px;
+}
+
+.file-uploader .single-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.file-uploader .single-preview .carousel-item-remove {
+  opacity: 0;
+}
+
+.file-uploader .single-preview-item:hover .carousel-item-remove {
+  opacity: 1;
+}
+
+.file-uploader .preview-carousel {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  padding: 8px 8px 8px 0;
+  position: relative;
+  transition: transform 0.3s ease;
+  margin-left: 0;
+  transform: translateX(0) !important;
+}
+
+.file-uploader .carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  cursor: grab;
+  user-select: none;
+  padding: 0 5px;
+}
+
+.file-uploader .carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.file-uploader .carousel-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.file-uploader .carousel-item,
+.file-uploader .uploader-carousel-item {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-right: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px var(--uploader-shadow);
+  transition: transform 0.3s ease;
+  animation: scaleIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.file-uploader .carousel-item img,
+.file-uploader .uploader-carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.file-uploader .carousel-item:first-child,
+.file-uploader .uploader-carousel-item:first-child {
+  margin-left: 10px;
+}
+
+.file-uploader .carousel-item-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: rgba(231, 76, 60, 0.50);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 20;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.file-uploader .carousel-item-remove:hover {
+  background-color: #c0392b;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.file-uploader .carousel-item:hover .carousel-item-remove,
+.file-uploader .uploader-carousel-item:hover .carousel-item-remove,
+.file-uploader .carousel-item-remove.spinner-active {
+  opacity: 1;
+}
+
+.file-uploader .carousel-item-remove svg {
+  width: 10px !important;
+  height: 10px !important;
+  display: block;
+  color: white;
+  fill: currentColor;
+}
+
+.file-uploader .carousel-item-remove svg path {
+  fill: white !important;
+}
+
+.file-uploader .file-extension {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+.file-uploader .uploader-reset-button {
+  display: none;
+}
+
+.file-uploader .uploader-edit-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 5;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #666666;
+  border: none;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 3px 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.file-uploader .uploader-edit-button svg {
+  width: 12px !important;
+  height: 12px !important;
+  fill: currentColor;
+  margin-right: 3px;
+}
+
+.file-uploader .uploader-edit-button:hover {
+  background-color: rgba(250, 250, 250, 1);
+  color: var(--uploader-primary);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-uploader .add-file-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background-color: var(--uploader-bg);
+  border: 1px dashed var(--uploader-border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--uploader-primary);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px var(--uploader-shadow);
+  margin-right: 8px;
+}
+
+.file-uploader .add-file-button:hover {
+  border-color: var(--uploader-primary);
+  background-color: rgba(74, 144, 226, 0.05);
+}
+
+.file-uploader .add-file-button svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.file-uploader .carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.75;
+  padding: 0;
+}
+
+.file-uploader .carousel-nav:hover,
+.file-uploader .carousel-nav:focus {
+  background: rgba(255, 255, 255, 0.9);
+  opacity: 1;
+  outline: none;
+}
+
+.file-uploader .carousel-nav:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.file-uploader .carousel-nav svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--uploader-text);
+}
+
+.file-uploader .carousel-prev {
+  left: 5px;
+}
+
+.file-uploader .carousel-next {
+  right: 5px;
+}
+
+.file-uploader .carousel-container {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.file-uploader .preview-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.file-uploader .uploader-error,
+.file-uploader .uploader-success {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 10px 6px 30px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 15;
+  pointer-events: none;
+  width: 85%;
+  max-width: 290px;
+  line-height: 1.4;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.file-uploader .uploader-error {
+  background-color: rgba(253, 237, 237, 0.95);
+  color: #d32f2f;
+  border-left: 3px solid #e57373;
+}
+
+.file-uploader .uploader-success {
+  background-color: rgba(232, 245, 233, 0.95);
+  color: #2e7d32;
+  border-left: 3px solid #81c784;
+}
+
+.file-uploader .uploader-error::before,
+.file-uploader .uploader-success::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.file-uploader .uploader-error::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d32f2f'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
+}
+
+.file-uploader .uploader-success::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232e7d32'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+}
+
+.file-uploader .uploader-error.show,
+.file-uploader .uploader-success.show {
+  bottom: 10px;
+  opacity: 1;
+}
+
+.file-uploader.uploader-error-state {
+  background-color: rgba(231, 76, 60, 0.05);
+  box-shadow: 0 0 0 1px var(--uploader-error, #e74c3c);
+}
+
+.file-uploader.uploader-success-state {
+  background-color: rgba(46, 125, 50, 0.05);
+  box-shadow: 0 0 0 1px var(--uploader-success, #2ecc71);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.file-uploader .file-pdf { background-color: var(--file-pdf); }
+.file-uploader .file-doc, .file-uploader .file-docx { background-color: var(--file-doc); }
+.file-uploader .file-xls, .file-uploader .file-xlsx { background-color: var(--file-xls); }
+.file-uploader .file-ppt, .file-uploader .file-pptx { background-color: var(--file-ppt); }
+.file-uploader .file-txt { background-color: var(--file-txt); }
+.file-uploader .file-zip, .file-uploader .file-rar { background-color: var(--file-zip); }
+.file-uploader .file-img { background-color: var(--file-default); }
+.file-uploader .file-default { background-color: var(--file-default); }
+
+.file-uploader .carousel-item.partial-visible,
+.file-uploader .uploader-carousel-item.partial-visible {
+  transform: scale(0.92);
+  opacity: 0.7;
+}
+
+.file-uploader .drop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(74, 144, 226, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 500;
+  font-size: 16px;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  border-radius: 8px;
+}
+
+.file-uploader .drop-overlay.active {
+  opacity: 1;
+}
+
+.file-uploader .clickable-preview {
+  cursor: pointer;
+  position: relative;
+}
+
+.file-uploader .clickable-preview::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 3;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.file-uploader .clickable-preview:hover::after {
+  opacity: 1;
+}
+
+.file-uploader .preview-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 6px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 5;
+  white-space: nowrap;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+
+.file-uploader .preview-label svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  margin-right: 2px;
+}
+
+.file-uploader .clickable-preview:hover .preview-label {
+  opacity: 1;
+}
+
+@keyframes spinAnimation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.file-uploader .spinner-active svg.spin {
+  animation: spinAnimation 1.2s linear infinite;
+}
+
+.file-uploader .carousel-item-remove.spinner-active {
+  opacity: 1 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  cursor: default;
+}
+
+.file-uploader .carousel-item-remove.spinner-active svg {
+  fill: white !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+
+
+
+
+

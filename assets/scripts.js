@@ -1,3 +1,11 @@
+/**
+ * xCode Drag & Drop Uploader
+ * A modern, flexible file upload component
+ * 
+ * @author Ahmed Ali <https://github.com/AhmedaliMo7amed>
+ * @copyright 2025 Ahmed Ali. All rights reserved.
+ */
+
 class FileUploader {
   constructor(element) {
     this.element = element;

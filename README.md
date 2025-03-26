@@ -1,3 +1,7 @@
+# XCode Uploader
+
+![XCode Uploader Logo](imgs/xcode-logo.png)
+
 # xCode Drag & Drop Uploader
 
 <p align="center">
@@ -7,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img width="200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzNjdkNiI+PHBhdGggZD0iTTE5LjM1IDEwLjA0QzE4LjY3IDYuNTkgMTUuNjQgNCAxMiA0IDkuMTEgNCA2LjYgNS42NCA1LjM1IDguMDQgMi4zNCA4LjM2IDAgMTAuOTEgMCAxNGMwIDMuMzEgMi42OSA2IDYgNmgxM2MyLjc2IDAgNS0yLjI0IDUtNSAwLTIuNjQtMi4wNS00Ljc4LTQuNjUtNC45NnpNMTQgMTN2NGgtNHYtNEg3bDUtNSA1IDVoLTN6Ii8+PC9zdmc+" alt="xCode Uploader Logo">
+     <img width="200" src="imgs/xcode-logo.png" alt="xCode Uploader Logo">
 </p>
 
 <h2 align="center">A modern, flexible file upload component</h2>

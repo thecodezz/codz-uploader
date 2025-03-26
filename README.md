@@ -2,7 +2,7 @@
 <div align="center">
   <p>
     <img width="70" src="imgs/codz-logo.png" alt="CODz Uploader Logo">
-    <strong style="font-size:24px;">Drag & Drop Uploader</strong>
+    <strong style="font-size:50px;">Drag & Drop Uploader</strong>
   </p>
 
   <p>

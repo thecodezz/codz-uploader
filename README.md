@@ -69,14 +69,15 @@ If you're using Laravel, you can use the included Blade component using any of t
 />
 
 <!-- Using Blade Component Directive -->
-@component('components.uploader')
-    @slot('name') document @endslot
-    @slot('label') Upload Document @endslot
-    @slot('multiple') false @endslot
-    @slot('required') true @endslot
-    @slot('accept') .pdf,.docx @endslot
-    @slot('maxSize') 5120 @endslot
-    @slot('deleteRouteName') files.delete @endslot
+@component('components.uploader', [
+    'name' => 'document',
+    'label' => 'Upload Document',
+    'multiple' => false,
+    'required' => true,
+    'accept' => '.pdf,.docx',
+    'maxSize' => '5120',
+    'deleteRouteName' => 'files.delete'
+])
 @endcomponent
 ```
 

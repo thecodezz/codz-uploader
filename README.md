@@ -1,9 +1,9 @@
 # CODz | Drag & Drop Uploader
 <div align="center">
-  <div style="display: flex; align-items: center; justify-content: center;">
+  <p>
     <img width="70" src="imgs/codz-logo.png" alt="CODz Uploader Logo">
-    <h1 style="margin-left: 10px;">Drag & Drop Uploader</h1>
-  </div>
+    <strong style="font-size:24px;">Drag & Drop Uploader</strong>
+  </p>
 
   <p>
     <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version">

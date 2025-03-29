@@ -1,14 +1,14 @@
 /**
- * xCode Drag & Drop Uploader - Styles
- * 
+ * CODz Drag & Drop File Uploader - Styles
+ *
  * A modern, flexible file upload component with customizable styles.
- * 
+ *
  * @author Ahmed Ali
- * @github https://github.com/AhmedaliMo7amed
+ * @github https://github.com/thecodezz
  * @copyright 2025 Ahmed Ali. All rights reserved.
  */
 
-:root {
+ :root {
   --uploader-primary: #4a90e2;
   --uploader-border: #dbe1e9;
   --uploader-text: #333333;

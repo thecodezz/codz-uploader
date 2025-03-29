@@ -1,8 +1,8 @@
 /**
- * xCode Drag & Drop Uploader
+ * CODz Drag & Drop File Uploader
  * A modern, flexible file upload component
- * 
- * @author Ahmed Ali <https://github.com/AhmedaliMo7amed>
+ *
+ * @author Ahmed Ali <https://github.com/thecodezz>
  * @copyright 2025 Ahmed Ali. All rights reserved.
  */
 
@@ -94,14 +94,12 @@ class FileUploader {
     this.element.appendChild(this.errorElement);
     this.element.appendChild(this.successElement);
 
-    // Initialize hidden input for form submission
     this.isArrayName = this.config.name.endsWith('[]');
     this.baseName = this.isArrayName ? this.config.name.slice(0, -2) : this.config.name;
 
     this.hiddenInput = document.createElement('input');
     this.hiddenInput.type = 'hidden';
     this.hiddenInput.name = this.isArrayName ? `${this.baseName}[]` : `${this.baseName}`;
-    this.element.appendChild(this.hiddenInput);
 
     this.fileInputContainer = document.createElement('div');
     this.fileInputContainer.style.display = 'none';
@@ -326,10 +324,9 @@ class FileUploader {
       return true;
     });
 
-    // Clear the file input if validation failed to allow reselection of the same file
     if (validationFailed) {
       this.fileInput.value = '';
-      return; // Exit early - don't process any files if validation failed
+      return;
     }
 
     if (validFiles.length === 0) return;
@@ -403,12 +400,10 @@ class FileUploader {
   }
 
   showError(message) {
-    // Clear any existing error timeout
     if (this._errorTimeout) {
       clearTimeout(this._errorTimeout);
     }
 
-    // Format error messages to be more user-friendly
     if (message.includes('File type not accepted')) {
       const fileType = message.split(':')[1]?.trim() || 'Unsupported type';
       const acceptedTypes = this.formatAcceptedTypes();
@@ -427,7 +422,6 @@ class FileUploader {
       message = `Unable to delete the file.`;
     }
 
-    // Clear the file input value to allow reselection of the same file
     if (this.fileInput && (message.includes('not supported') || message.includes('exceeds'))) {
       this.fileInput.value = '';
     }
@@ -501,7 +495,6 @@ class FileUploader {
     const item = document.createElement('div');
     item.className = 'single-preview-item';
 
-    // Create the file preview content first (without click behavior)
     if (this.isImageFile(file)) {
       const img = document.createElement('img');
 
@@ -531,7 +524,6 @@ class FileUploader {
       `;
     }
 
-    // Now add the preview overlay and click behavior if it's an existing file
     if (file.isExisting && file.url) {
       item.classList.add('clickable-preview');
 
@@ -583,7 +575,6 @@ class FileUploader {
       const item = document.createElement('div');
       item.className = 'uploader-carousel-item';
 
-      // Create the file preview content first (without click behavior)
       if (this.isImageFile(file)) {
         const img = document.createElement('img');
 
@@ -613,7 +604,6 @@ class FileUploader {
         `;
       }
 
-      // Now add the preview overlay and click behavior if it's an existing file
       if (file.isExisting && file.url) {
         item.classList.add('clickable-preview');
 
@@ -766,7 +756,6 @@ class FileUploader {
   getFileExtension(file) {
     if (!file) return 'FILE';
 
-    // Excel MIME types
     const excelMimeTypes = [
       'application/vnd.ms-excel',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -778,7 +767,6 @@ class FileUploader {
       'application/vnd.ms-excel.sheet.macroenabled.12'
     ];
 
-    // Word MIME types
     const wordMimeTypes = [
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -787,7 +775,6 @@ class FileUploader {
       'application/rtf'
     ];
 
-    // PowerPoint MIME types
     const pptMimeTypes = [
       'application/vnd.ms-powerpoint',
       'application/vnd.openxmlformats-officedocument.presentationml.presentation',
@@ -799,12 +786,10 @@ class FileUploader {
         const name = file.name;
         const type = file.type;
 
-        // First check by MIME type
         if (type) {
             if (type.includes('pdf')) return 'PDF';
             if (type.includes('image/')) return 'IMG';
 
-            // Check if it's an Excel file
             if (excelMimeTypes.some(mime => type.includes(mime)) ||
                 type.includes('sheet') ||
                 type.includes('excel') ||
@@ -813,14 +798,12 @@ class FileUploader {
                 return 'XLS';
             }
 
-            // Check if it's a Word file
             if (wordMimeTypes.some(mime => type.includes(mime)) ||
                 type.includes('msword') ||
                 type.includes('wordprocessingml')) {
                 return 'DOC';
             }
 
-            // Check if it's a PowerPoint file
             if (pptMimeTypes.some(mime => type.includes(mime)) ||
                 type.includes('powerpoint') ||
                 type.includes('presentation')) {
@@ -831,26 +814,21 @@ class FileUploader {
             if (type.includes('zip') || type.includes('compressed') || type.includes('archive')) return 'ZIP';
         }
 
-        // Then check by file extension
         if (name) {
             const ext = name.split('.').pop().toLowerCase();
 
-            // Common document types
             if (['pdf'].includes(ext)) return 'PDF';
             if (['doc', 'docx', 'rtf', 'odt'].includes(ext)) return 'DOC';
             if (['xls', 'xlsx', 'xlsm', 'xlsb', 'csv', 'ods'].includes(ext)) return 'XLS';
             if (['ppt', 'pptx', 'pptm', 'odp'].includes(ext)) return 'PPT';
             if (['txt', 'text', 'md', 'markdown'].includes(ext)) return 'TXT';
 
-            // Archive types
             if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return 'ZIP';
 
-            // Image types
             if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'tif'].includes(ext)) return 'IMG';
         }
     }
 
-    // For existing files with URLs
     if (file.url) {
         const ext = file.url.split('.').pop().toLowerCase().split(/[?#]/)[0];
 
@@ -872,10 +850,8 @@ class FileUploader {
    * @returns {string} - The normalized extension for CSS class
    */
   normalizeExtension(extension) {
-    // Make sure we're working with uppercase extension strings
     const upperExt = extension.toUpperCase();
 
-    // Direct mapping for our identified types
     switch(upperExt) {
         case 'PDF': return 'pdf';
         case 'DOC': return 'doc';
@@ -921,6 +897,10 @@ class FileUploader {
 
     this.updatePreview();
     this.attachFilesToForm();
+
+    if (this.files.length === 0 && this.fileInput) {
+      this.fileInput.removeAttribute('name');
+    }
   }
 
   deleteFileViaAjax(file, index) {
@@ -1055,28 +1035,26 @@ class FileUploader {
   }
 
   updateHiddenInputValue() {
-    if (!this.hiddenInput) return;
-
-    if (this.files.length === 0) {
-      this.hiddenInput.value = '';
-
-      if (this.fileInput) {
-        this.fileInput.value = '';
-      }
-      return;
+    if (this.hiddenInput.parentNode) {
+      this.hiddenInput.parentNode.removeChild(this.hiddenInput);
     }
 
-    this.prepareFilesForSubmission();
+    if (this.files.length === 0) {
+      return;
+    }
 
     const existingFileIds = this.files
       .filter(file => file.isExisting)
       .map(file => file.id);
 
-    if (this.config.singleMode) {
-      const file = this.files[0];
-      this.hiddenInput.value = file.isExisting ? file.id : '';
-    } else {
-      this.hiddenInput.value = JSON.stringify(existingFileIds);
+    if (existingFileIds.length > 0) {
+      if (this.config.singleMode) {
+        const file = this.files[0];
+        this.hiddenInput.value = file.isExisting ? file.id : '';
+      } else {
+        this.hiddenInput.value = JSON.stringify(existingFileIds);
+      }
+      this.element.appendChild(this.hiddenInput);
     }
   }
 
@@ -1085,31 +1063,49 @@ class FileUploader {
     if (!form) return;
 
     const newFiles = this.files.filter(file => !file.isExisting);
-    if (newFiles.length === 0) return;
+
+    if (newFiles.length === 0) {
+      if (this.fileInput) {
+        this.fileInput.value = '';
+        this.fileInput.removeAttribute('name');
+      }
+      return;
+    }
 
     form.setAttribute('enctype', 'multipart/form-data');
 
     if (typeof FormData !== 'undefined') {
       if (!form._uploaderInitialized) {
+        const originalSubmit = form.submit;
+
         form.addEventListener('submit', (e) => {
           if (form._isSubmitting) return;
 
           e.preventDefault();
           form._isSubmitting = true;
 
+          const originalName = this.fileInput.name;
+          this.fileInput.removeAttribute('name');
+
           const formData = new FormData(form);
 
           this.removeExistingFileInputs(form);
 
-          if (this.config.singleMode && newFiles.length > 0) {
-            formData.append(this.config.name, newFiles[0].originalFile || newFiles[0]);
-          } else {
-            newFiles.forEach((file, i) => {
-              formData.append(`${this.config.name}[]`, file.originalFile || file);
-            });
+          if (newFiles.length > 0) {
+            if (this.config.singleMode) {
+              formData.append(this.config.name, newFiles[0].originalFile || newFiles[0]);
+            } else {
+              newFiles.forEach((file) => {
+                formData.append(`${this.config.name}[]`, file.originalFile || file);
+              });
+            }
           }
 
           this.submitFormWithFormData(form, formData);
+
+          if (originalName) {
+            this.fileInput.name = originalName;
+          }
         });
 
         form._uploaderInitialized = true;
@@ -1119,62 +1115,25 @@ class FileUploader {
     }
   }
 
-  removeExistingFileInputs(form) {
-    const existingInputs = form.querySelectorAll(`input[name="${this.config.name}"][type="file"], input[name="${this.config.name}[]"][type="file"]`);
-    existingInputs.forEach(input => {
-      if (input !== this.fileInput) {
-        input.parentNode.removeChild(input);
-      }
-    });
-  }
-
-  createFileInputsForSubmission(form, files) {
-    this.removeExistingFileInputs(form);
-
-    if (files.length === 0) return;
-
-    files.forEach((file, i) => {
-      if (!file.originalFile) return;
-
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.name = this.config.singleMode ? this.config.name : `${this.config.name}[]`;
-      input.style.display = 'none';
-
-      if (i === files.length - 1) {
-        setTimeout(() => {
-          form.submit();
-        }, 100);
-      }
-
-      form.appendChild(input);
-    });
-  }
-
-  submitFormWithFormData(form, formData) {
-    const iframe = document.createElement('iframe');
-    iframe.name = `uploader-iframe-${Date.now()}`;
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    form.target = iframe.name;
-    form.submit();
-
-    setTimeout(() => {
-      form._isSubmitting = false;
-      document.body.removeChild(iframe);
-    }, 1000);
-  }
-
   attachFilesToForm() {
     try {
       this.fileInputContainer.innerHTML = '';
       this.fileInputs = [];
 
       const newFiles = this.files.filter(file => !file.isExisting);
+
+      this.updateHiddenInputValue();
+
       if (newFiles.length === 0) {
-        this.updateHiddenInputValue();
+        if (this.fileInput) {
+          this.fileInput.value = '';
+          this.fileInput.removeAttribute('name');
+        }
         return;
+      }
+
+      if (this.fileInput && this.config.name) {
+        this.fileInput.name = this.config.name;
       }
 
       const form = this.findNearestForm();
@@ -1182,7 +1141,7 @@ class FileUploader {
         form.setAttribute('enctype', 'multipart/form-data');
       }
 
-      if (this.config.singleMode && newFiles.length > 0) {
+      if (this.config.singleMode) {
         const input = this.createFileInputWithFile(newFiles[0].originalFile, this.config.name);
         this.fileInputs.push(input);
         this.fileInputContainer.appendChild(input);
@@ -1194,8 +1153,6 @@ class FileUploader {
           this.fileInputContainer.appendChild(input);
         });
       }
-
-      this.updateHiddenInputValue();
     } catch (error) {
       console.error('Error attaching files to form:', error);
     }
@@ -1290,7 +1247,6 @@ function setupFormValidation() {
         return true;
     });
 
-    // Handle file input changes
     document.addEventListener('change', function(e) {
         if (!e.target.matches('.file-uploader[data-required="true"] input[type="file"]')) return;
 

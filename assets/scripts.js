@@ -174,7 +174,18 @@ class FileUploader {
         'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'ppt': 'application/vnd.ms-powerpoint',
         'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'txt': 'text/plain'
+        'txt': 'text/plain',
+        'mp4': 'video/mp4',
+        'webm': 'video/webm',
+        'ogg': 'video/ogg',
+        'mov': 'video/quicktime',
+        'avi': 'video/x-msvideo',
+        'wmv': 'video/x-ms-wmv',
+        'flv': 'video/x-flv',
+        'mkv': 'video/x-matroska',
+        'm4v': 'video/x-m4v',
+        '3gp': 'video/3gpp',
+        '3g2': 'video/3gpp2'
       };
 
       return mimeTypes[extension] || 'application/octet-stream';
@@ -782,6 +793,20 @@ class FileUploader {
       'application/vnd.ms-powerpoint.presentation.macroEnabled'
     ];
 
+    const videoMimeTypes = [
+      'video/mp4',
+      'video/webm',
+      'video/ogg',
+      'video/quicktime',
+      'video/x-msvideo',
+      'video/x-ms-wmv',
+      'video/x-flv',
+      'video/x-matroska',
+      'video/x-m4v',
+      'video/3gpp',
+      'video/3gpp2'
+    ];
+
     if (file instanceof File || file.originalFile) {
         const name = file.name;
         const type = file.type;
@@ -789,6 +814,11 @@ class FileUploader {
         if (type) {
             if (type.includes('pdf')) return 'PDF';
             if (type.includes('image/')) return 'IMG';
+            
+            if (videoMimeTypes.some(mime => type.includes(mime)) ||
+                type.includes('video/')) {
+                return 'VID';
+            }
 
             if (excelMimeTypes.some(mime => type.includes(mime)) ||
                 type.includes('sheet') ||
@@ -826,6 +856,7 @@ class FileUploader {
             if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return 'ZIP';
 
             if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'tif'].includes(ext)) return 'IMG';
+            if (['mp4', 'webm', 'ogg', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'm4v', '3gp', '3g2'].includes(ext)) return 'VID';
         }
     }
 
@@ -839,6 +870,7 @@ class FileUploader {
         if (['txt', 'text', 'md', 'markdown'].includes(ext)) return 'TXT';
         if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return 'ZIP';
         if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'tif'].includes(ext)) return 'IMG';
+        if (['mp4', 'webm', 'ogg', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'm4v', '3gp', '3g2'].includes(ext)) return 'VID';
     }
 
     return 'FILE';
@@ -860,6 +892,7 @@ class FileUploader {
         case 'TXT': return 'txt';
         case 'ZIP': return 'zip';
         case 'IMG': return 'img';
+        case 'VID': return 'vid';
         default: return 'default';
     }
   }
@@ -880,6 +913,24 @@ class FileUploader {
     }
 
     return file.type && typeof file.type === 'string' && file.type.startsWith('image/');
+  }
+
+  isVideoFile(file) {
+    if (!file) return false;
+
+    if (file.isExisting) {
+      if (!file.url) return false;
+
+      try {
+        const ext = file.url.split('.').pop().toLowerCase();
+        return ['mp4', 'webm', 'ogg', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'm4v', '3gp', '3g2'].includes(ext);
+      } catch (e) {
+        console.warn('Error checking file extension:', e);
+        return false;
+      }
+    }
+
+    return file.type && typeof file.type === 'string' && file.type.startsWith('video/');
   }
 
   removeFile(index) {

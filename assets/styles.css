@@ -22,6 +22,7 @@
   --file-ppt: #ff9800;
   --file-txt: #607d8b;
   --file-zip: #9c27b0;
+  --file-vid: #9b59b6;
   --file-default: #757575;
 }
 
@@ -519,6 +520,7 @@
 .file-uploader .file-ppt, .file-uploader .file-pptx { background-color: var(--file-ppt); }
 .file-uploader .file-txt { background-color: var(--file-txt); }
 .file-uploader .file-zip, .file-uploader .file-rar { background-color: var(--file-zip); }
+.file-uploader .file-vid { background-color: var(--file-vid); } /* Add video file style */
 .file-uploader .file-img { background-color: var(--file-default); }
 .file-uploader .file-default { background-color: var(--file-default); }
 

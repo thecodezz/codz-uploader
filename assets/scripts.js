@@ -6,18 +6,67 @@
  * @copyright 2025 Ahmed Ali. All rights reserved.
  */
 
+// Accept matcher function - improved implementation for wildcard MIME types and extensions with spaces
+const createAcceptMatcher = (accept) => {
+  if (!accept) return () => true;
+  
+  const acceptItems = accept.split(',')
+    .map(item => item.trim())
+    .filter(Boolean);
+  
+  const extensions = acceptItems.filter(item => item.startsWith('.')).map(ext => ext.toLowerCase());
+  const mimeTypes = acceptItems.filter(item => !item.startsWith('.')).map(type => type.toLowerCase());
+  
+  return (file) => {
+    try {
+      const fileName = file.name.toLowerCase();
+      const fileType = file.type.toLowerCase();
+      
+      if (extensions.length === 0 && mimeTypes.length === 0) {
+        return true;
+      }
+      
+      if (extensions.length > 0 && extensions.some(ext => fileName.endsWith(ext))) {
+        return true;
+      }
+      
+      // Check MIME type match (including wildcards)
+      if (mimeTypes.length > 0) {
+        for (const type of mimeTypes) {
+          if (type.endsWith('/*')) {
+            const baseType = type.slice(0, -1);
+            if (fileType.startsWith(baseType)) {
+              return true;
+            }
+          } else if (fileType === type) {
+            return true;
+          }
+        }
+      }
+      
+      return extensions.length === 0 && mimeTypes.length === 0;
+    } catch (err) {
+      console.error('Error in accept matcher:', err);
+      return false;
+    }
+  };
+};
+
 class FileUploader {
   constructor(element) {
     this.element = element;
     this.config = {
       maxSize: parseInt(element.dataset.maxSize, 10) || 5120,
-      acceptedTypes: (element.dataset.acceptedTypes || '').split(','),
+      acceptedTypes: element.dataset.acceptedTypes || '',
       singleMode: element.dataset.singleMode === 'true',
       existingFiles: element.dataset.existingFiles ? JSON.parse(element.dataset.existingFiles) : [],
       deleteMethod: element.dataset.deleteMethod || 'GET',
       required: element.dataset.required === 'true',
       name: element.dataset.name || ''
     };
+    
+    // Create accept matcher function
+    this.acceptMatcher = createAcceptMatcher(this.config.acceptedTypes);
 
     this.icons = {
       upload: '<svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>',
@@ -54,7 +103,7 @@ class FileUploader {
     this.fileInput = document.createElement('input');
     this.fileInput.type = 'file';
     this.fileInput.className = 'uploader-input';
-    this.fileInput.accept = this.config.acceptedTypes.join(',');
+    this.fileInput.accept = this.config.acceptedTypes;
     this.fileInput.multiple = !this.config.singleMode;
 
     if (this.config.name) {
@@ -203,18 +252,11 @@ class FileUploader {
   }
 
   formatAcceptedTypes() {
+    if (!this.config.acceptedTypes) return 'All files';
+    
     return this.config.acceptedTypes
-      .map(type => {
-        if (type.startsWith('.')) {
-          return type;
-        }
-        else if (type.includes('/')) {
-          return type.replace('image/', '.').replace('application/', '.');
-        }
-        else {
-          return `.${type}`;
-        }
-      })
+      .split(',')
+      .map(type => type.trim())
       .join(', ');
   }
 
@@ -385,25 +427,14 @@ class FileUploader {
     }
   }
 
+  /**
+   * Validates if a file's type is accepted based on configured accept attribute
+   * @param {File} file - The file to validate
+   * @returns {boolean} - Whether the file type is accepted
+   */
   validateFileType(file) {
-    if (this.config.acceptedTypes.length === 0 || this.config.acceptedTypes[0] === '') {
-      return true;
-    }
-
-    const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-
-    return this.config.acceptedTypes.some(acceptedType => {
-      if (acceptedType.includes('/')) {
-        return file.type === acceptedType;
-      }
-      else if (acceptedType.startsWith('.')) {
-        return fileExtension === acceptedType.toLowerCase();
-      }
-      else if (acceptedType.match(/^[a-zA-Z0-9]+$/)) {
-        return fileExtension === `.${acceptedType.toLowerCase()}`;
-      }
-      return false;
-    });
+    if (!this.config.acceptedTypes) return true;
+    return this.acceptMatcher(file);
   }
 
   validateFileSize(file) {

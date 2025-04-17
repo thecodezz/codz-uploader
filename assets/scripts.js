@@ -6,6 +6,46 @@
  * @copyright 2025 Ahmed Ali. All rights reserved.
  */
 
+// Translations for UI text in English and Arabic
+const uploaderTranslations = {
+  en: {
+    dragDropText: "Drag & drop {0} here",
+    fileText: "a file",
+    filesText: "files",
+    acceptedTypesText: "Accepted types:",
+    maxSizeText: "Max size:",
+    selectFileText: "Select File",
+    selectFilesText: "Select Files",
+    dropFilesHereText: "Drop files here",
+    previewFileText: "PREVIEW FILE",
+    removeFileText: "Remove file",
+    newUploaderText: "NEW UPLOADER",
+    errorUnsupportedType: "Supported types is: {0}",
+    errorMaxSize: "Maximum allowed size is: {0}MB",
+    errorRequired: "{0} is required.",
+    errorDeleteFile: "Unable to delete the file.",
+    successDeleteFile: "File successfully deleted"
+  },
+  ar: {
+    dragDropText: "اسحب وأفلت {0} هنا",
+    fileText: "ملفًا",
+    filesText: "ملفات",
+    acceptedTypesText: "أنواع الملفات المقبولة:",
+    maxSizeText: "الحجم الأقصى:",
+    selectFileText: "اختر ملف",
+    selectFilesText: "اختر ملفات",
+    dropFilesHereText: "أفلت الملفات هنا",
+    previewFileText: "معاينة الملف",
+    removeFileText: "إزالة الملف",
+    newUploaderText: "رفع جديد",
+    errorUnsupportedType: "أنواع الملفات المدعومة: {0}",
+    errorMaxSize: "الحجم الأقصى المسموح به: {0} ميجابايت",
+    errorRequired: "{0} مطلوب.",
+    errorDeleteFile: "تعذر حذف الملف.",
+    successDeleteFile: "تم حذف الملف بنجاح"
+  }
+};
+
 // Accept matcher function - improved implementation for wildcard MIME types and extensions with spaces
 const createAcceptMatcher = (accept) => {
   if (!accept) return () => true;
@@ -62,8 +102,20 @@ class FileUploader {
       existingFiles: element.dataset.existingFiles ? JSON.parse(element.dataset.existingFiles) : [],
       deleteMethod: element.dataset.deleteMethod || 'GET',
       required: element.dataset.required === 'true',
-      name: element.dataset.name || ''
+      name: element.dataset.name || '',
+      lang: (element.dataset.lang || 'en').toLowerCase()
     };
+    
+    // Set default language to 'en' if invalid language is provided
+    if (this.config.lang !== 'en' && this.config.lang !== 'ar') {
+      this.config.lang = 'en';
+    }
+    
+    // Set RTL (right-to-left) class and dir attribute for Arabic
+    if (this.config.lang === 'ar') {
+      this.element.classList.add('uploader-rtl');
+      this.element.setAttribute('dir', 'rtl');
+    }
     
     // Create accept matcher function
     this.acceptMatcher = createAcceptMatcher(this.config.acceptedTypes);
@@ -76,7 +128,7 @@ class FileUploader {
       add: '<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>',
       previous: '<svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>',
       next: '<svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>',
-      browse: '<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>',
+      browse: '<svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-.9V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>',
       spinner: '<svg viewBox="0 0 24 24" class="spin"><path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/></svg>',
       back: '<svg viewBox="0 0 24 24"><path d="M19 11H7.14l3.63-4.36a1 1 0 1 0-1.54-1.28l-5 6a1.19 1.19 0 0 0-.09.15c0 .05 0 .08-.07.13A1 1 0 0 0 4 12a1 1 0 0 0 .07.36c0 .05 0 .08.07.13a1.19 1.19 0 0 0 .09.15l5 6A1 1 0 0 0 10 19a1 1 0 0 0 .64-.23 1 1 0 0 0 .13-1.41L7.14 13H19a1 1 0 0 0 0-2z" fill="currentColor"/></svg>',
       eye: '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg>',
@@ -95,6 +147,26 @@ class FileUploader {
     this.handleExistingFiles();
     this.setupEventListeners();
   }
+  
+  /**
+   * Gets a translated string based on the current language setting
+   * @param {string} key - The translation key
+   * @param {...string} params - Parameters to replace placeholders in the translation
+   * @returns {string} - The translated string
+   */
+  getTranslation(key, ...params) {
+    const translations = uploaderTranslations[this.config.lang] || uploaderTranslations.en;
+    let text = translations[key] || uploaderTranslations.en[key] || key;
+    
+    // Replace placeholders with parameters
+    if (params && params.length) {
+      params.forEach((param, index) => {
+        text = text.replace(`{${index}}`, param);
+      });
+    }
+    
+    return text;
+  }
 
   buildUploader() {
     this.contentElement = document.createElement('div');
@@ -110,15 +182,21 @@ class FileUploader {
       this.fileInput.name = this.config.name;
     }
 
+    const fileTypeText = this.config.singleMode ? 
+      this.getTranslation('fileText') : 
+      this.getTranslation('filesText');
+      
     this.emptyStateElement = document.createElement('div');
     this.emptyStateElement.innerHTML = `
       <div class="uploader-icon">${this.icons.upload}</div>
-      <div class="uploader-text">Drag & drop ${this.config.singleMode ? 'a file' : 'files'} here</div>
+      <div class="uploader-text">${this.getTranslation('dragDropText', fileTypeText)}</div>
       <div class="uploader-hint">
-        Accepted types: ${this.formatAcceptedTypes()}
-        <br>Max size: ${this.formatMaxSize()}
+        ${this.getTranslation('acceptedTypesText')} ${this.formatAcceptedTypes()}
+        <br>${this.getTranslation('maxSizeText')} ${this.formatMaxSize()}
       </div>
-      <button type="button" class="uploader-browse">${this.icons.browse} Select File${this.config.singleMode ? '' : 's'}</button>
+      <button type="button" class="uploader-browse">
+        ${this.icons.browse} ${this.config.singleMode ? this.getTranslation('selectFileText') : this.getTranslation('selectFilesText')}
+      </button>
     `;
 
     this.previewElement = document.createElement('div');
@@ -133,7 +211,7 @@ class FileUploader {
 
     this.dropOverlay = document.createElement('div');
     this.dropOverlay.className = 'drop-overlay';
-    this.dropOverlay.innerHTML = 'Drop files here';
+    this.dropOverlay.innerHTML = this.getTranslation('dropFilesHereText');
     this.element.appendChild(this.dropOverlay);
 
     this.contentElement.appendChild(this.emptyStateElement);
@@ -252,7 +330,7 @@ class FileUploader {
   }
 
   formatAcceptedTypes() {
-    if (!this.config.acceptedTypes) return 'All files';
+    if (!this.config.acceptedTypes) return this.getTranslation('filesText');
     
     return this.config.acceptedTypes
       .split(',')
@@ -447,21 +525,19 @@ class FileUploader {
     }
 
     if (message.includes('File type not accepted')) {
-      const fileType = message.split(':')[1]?.trim() || 'Unsupported type';
       const acceptedTypes = this.formatAcceptedTypes();
-      message = `Supported types is: ${acceptedTypes}`;
+      message = this.getTranslation('errorUnsupportedType', acceptedTypes);
     }
     else if (message.includes('File too large')) {
-      const size = message.match(/(\d+\.?\d*)MB/)?.[1] || 'Your file';
       const maxSize = (this.config.maxSize / 1024).toFixed(1);
-      message = `Maximum allowed size is: ${maxSize}MB`;
+      message = this.getTranslation('errorMaxSize', maxSize);
     }
     else if (message.includes('required')) {
       const field = message.replace(' is required', '');
-      message = `${field.toLowerCase()} is required.`;
+      message = this.getTranslation('errorRequired', field.toLowerCase());
     }
     else if (message.includes('Error deleting')) {
-      message = `Unable to delete the file.`;
+      message = this.getTranslation('errorDeleteFile');
     }
 
     if (this.fileInput && (message.includes('not supported') || message.includes('exceeds'))) {
@@ -481,6 +557,11 @@ class FileUploader {
   showSuccess(message) {
     if (this._successTimeout) {
       clearTimeout(this._successTimeout);
+    }
+
+    // Use translated success message
+    if (message.includes('File successfully deleted')) {
+      message = this.getTranslation('successDeleteFile');
     }
 
     this.successElement.textContent = message;
@@ -515,8 +596,8 @@ class FileUploader {
     previewContainer.className = this.config.singleMode ? 'single-preview' : 'preview-container';
     const editButton = document.createElement('button');
     editButton.className = 'uploader-edit-button';
-    editButton.innerHTML = `${this.icons.upload} NEW UPLOADER`;
-    editButton.title = 'Open New Uploader';
+    editButton.innerHTML = `${this.icons.upload} ${this.getTranslation('newUploaderText')}`;
+    editButton.title = this.config.lang === 'ar' ? 'فتح أداة رفع جديدة' : 'Open New Uploader';
     editButton.addEventListener('click', this.handleReset.bind(this));
 
     if (this.config.singleMode) {
@@ -571,7 +652,7 @@ class FileUploader {
 
       const previewLabel = document.createElement('div');
       previewLabel.className = 'preview-label';
-      previewLabel.innerHTML = `${this.icons.eye} PREVIEW FILE`;
+      previewLabel.innerHTML = `${this.icons.eye} ${this.getTranslation('previewFileText')}`;
       item.appendChild(previewLabel);
 
       item.addEventListener('click', (e) => {
@@ -651,7 +732,7 @@ class FileUploader {
 
         const previewLabel = document.createElement('div');
         previewLabel.className = 'preview-label';
-        previewLabel.innerHTML = `${this.icons.eye} PREVIEW FILE`;
+        previewLabel.innerHTML = `${this.icons.eye} ${this.getTranslation('previewFileText')}`;
         item.appendChild(previewLabel);
 
         item.addEventListener('click', (e) => {
@@ -682,13 +763,13 @@ class FileUploader {
     prevButton.type = 'button';
     prevButton.className = 'carousel-nav carousel-prev';
     prevButton.innerHTML = this.icons.previous;
-    prevButton.setAttribute('aria-label', 'Previous files');
+    prevButton.setAttribute('aria-label', this.config.lang === 'ar' ? 'الملفات السابقة' : 'Previous files');
 
     const nextButton = document.createElement('button');
     nextButton.type = 'button';
     nextButton.className = 'carousel-nav carousel-next';
     nextButton.innerHTML = this.icons.next;
-    nextButton.setAttribute('aria-label', 'Next files');
+    nextButton.setAttribute('aria-label', this.config.lang === 'ar' ? 'الملفات التالية' : 'Next files');
 
     carouselContainer.appendChild(prevButton);
     carouselContainer.appendChild(nextButton);
@@ -758,7 +839,7 @@ class FileUploader {
     const removeButton = document.createElement('button');
     removeButton.className = 'carousel-item-remove';
     removeButton.innerHTML = this.icons.delete;
-    removeButton.title = 'Remove file';
+    removeButton.title = this.getTranslation('removeFileText');
 
     removeButton.style.display = 'flex';
     removeButton.style.alignItems = 'center';
@@ -1019,11 +1100,11 @@ class FileUploader {
         this.files.splice(index, 1);
         this.updatePreview();
         this.updateHiddenInputValue();
-        this.showSuccess("File successfully deleted");
+        this.showSuccess(this.getTranslation('successDeleteFile'));
       },
       error: (xhr, status, error) => {
         this.restoreDeleteButton(carouselItem, index);
-        const errorMsg = xhr.responseJSON?.message || 'Error deleting file';
+        const errorMsg = xhr.responseJSON?.message || this.getTranslation('errorDeleteFile');
         this.showError(errorMsg);
       }
     };
@@ -1054,7 +1135,7 @@ class FileUploader {
       .then(response => {
         if (!response.ok) {
           return response.json().then(data => {
-            throw new Error(data.message || 'Error deleting file');
+            throw new Error(data.message || this.getTranslation('errorDeleteFile'));
           });
         }
         return response.json().catch(() => ({}));
@@ -1063,11 +1144,11 @@ class FileUploader {
         this.files.splice(index, 1);
         this.updatePreview();
         this.updateHiddenInputValue();
-        this.showSuccess("File successfully deleted");
+        this.showSuccess(this.getTranslation('successDeleteFile'));
       })
       .catch(error => {
         this.restoreDeleteButton(carouselItem, index);
-        this.showError(error.message || 'Error deleting file');
+        this.showError(error.message || this.getTranslation('errorDeleteFile'));
       });
   }
 

@@ -43,10 +43,16 @@
     @if ($hasLabel)
         <label class="form-label">{{ $label }}</label>
     @endif
-    <div class="file-uploader" id="{{ $id }}" data-name="{{ $name }}"
-        data-single-mode="{{ $multiple ? 'false' : 'true' }}" data-max-size="{{ $maxSize }}"
-        data-accepted-types="{{ $accept }}" data-delete-method="{{ $deleteMethod }}"
-        @if($hasFiles) data-existing-files='{{ $existingFilesJson }}' @endif
-        data-required="{{ $required ? 'true' : 'false' }}">
+    <div class="file-uploader" id="{{ $id }}" 
+        data-name="{{ $name }}"
+        data-single-mode="{{ $multiple ? 'false' : 'true' }}" 
+        data-max-size="{{ $maxSize }}"
+        data-accepted-types="{{ $accept }}"
+        data-required="{{ $required ? 'true' : 'false' }}"
+        @if($hasFiles) 
+        data-delete-method="{{ $deleteMethod }}"
+        data-existing-files='{{ $existingFilesJson }}' 
+        @endif
+        >
     </div>
 </div>
